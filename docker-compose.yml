@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+  mongo:
+    image: 'mongo:4.0.7'
+    ports:
+      - '27017:27017'
+    volumes:
+      - ./docker/mongodata:/var/lib/mongodb/data 777
+
+  db:
+    build: ./docker/postgres
+    restart: always
+    tty: true
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./docker/dbdata:/var/lib/postgresql/data 777
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=librarydb

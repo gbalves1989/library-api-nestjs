@@ -1,0 +1,50 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updateAt  DateTime @updatedAt @db.Timestamptz(3)
+
+  Book Book[]
+
+  @@map("categories")
+}
+
+model Author {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  avatar    String?
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updateAt  DateTime @updatedAt @db.Timestamptz(3)
+
+  Book Book[]
+
+  @@map("authors")
+}
+
+model Book {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String
+  banner      String?
+  categoryId  String
+  authorId    String
+  createdAt   DateTime @default(now()) @db.Timestamptz(3)
+  updateAt    DateTime @updatedAt @db.Timestamptz(3)
+
+  category Category @relation(fields: [categoryId], references: [id])
+  author   Author   @relation(fields: [authorId], references: [id])
+
+  @@map("books")
+}
